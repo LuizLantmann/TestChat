@@ -1,6 +1,5 @@
 const express = require("express");
 const path = require("path");
-const { Socket } = require("socket.io");
 
 const app = express();
 const server = require("http").createServer(app);
@@ -15,8 +14,14 @@ app.use("/", (req, res) => {
   res.render("index.html");
 });
 
-io.on("connection", (Socket) => {
-  console.log(`Socket conectado! ${Socket.id}`);
+let messages = [];
+
+io.on("connection", (socket) => {
+  console.log(`Socket conectado! ${socket.id}`);
+
+  socket.on("sendMessage", (data) => {
+    messages.push(data);
+  });
 });
 
 server.listen(3000);
